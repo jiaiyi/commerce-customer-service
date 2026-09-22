@@ -2,10 +2,13 @@ from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-ENV_FILE = Path(__file__).resolve().parents[2] / ".env"
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=ENV_FILE,env_file_encoding="utf-8",extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=Path(__file__).resolve().parents[2] / ".env",
+        env_file_encoding="utf-8",
+        extra="ignore"
+    )
 
     llm_model:str
     llm_base_url:str

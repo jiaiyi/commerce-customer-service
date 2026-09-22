@@ -95,5 +95,10 @@ temp/
 # 若希望团队共享这些笔记，删掉下面这一行即可。
 .workbuddy/
 
+# ---- Kilo Code 工作目录 ----
+# 内含 .kilo/worktrees/ —— 那是 git worktree 的完整项目副本（每个 = 一份 checkout），
+# 提交进去会让仓库体积爆炸。必须忽略。
+.kilo/
+
 # ---- 保持目录结构（例：上传目录需要占位文件时）----
 # !uploads/.gitkeep

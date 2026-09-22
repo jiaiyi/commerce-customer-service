@@ -6,7 +6,7 @@ engine : AsyncEngine | None = None
 session_factory : async_sessionmaker[AsyncSession] | None = None
 
 # 初始化数据库和会话工厂
-def init_db_engine() -> None:
+def init_db_engine_and_session_factory() -> None:
     global engine, session_factory
     engine = create_async_engine(
         settings.database_url,
