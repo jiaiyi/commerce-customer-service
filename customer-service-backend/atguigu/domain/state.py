@@ -1,6 +1,7 @@
 import time
+import uuid
 from dataclasses import dataclass, field
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from atguigu.domain.contexts import TaskContext, SystemContext
 from atguigu.domain.message import UserMessage, BotMessage
@@ -80,3 +81,72 @@ class DialogueState:
         state.sessions = [Session.from_dict(s) for s in data.get("sessions", [])]
         state.current_session_id = data.get("current_session_id")
         return state
+
+    def get_current_session(self) ->Session|None:
+        if self.current_session_id is None:
+            return None
+        for session in self.sessions:
+            if session.session_id == self.current_session_id:
+                return session
+
+    def start_session(self):
+        now_time = time.time()
+        new_session = Session(
+            session_id=str(uuid.uuid4()),
+            stared_at=now_time,
+            last_activity_at=now_time,
+        )
+        self.sessions.append(new_session)
+        self.current_session_id = new_session.session_id
+
+    def close_current_session(self):
+        self.get_current_session().closed_at = time.time()
+        self.current_session_id = None
+
+    def reset_runtime_state_for_new_session(self):
+        self.active_task = None
+        self.active_system_task = None
+        self.focused_object = None
+        self.paused_tasks = []
+
+    def update_session_last_activity(self):
+        self.get_current_session().last_activity_at = time.time()
+
+    def begin_turn(self, user_message:UserMessage):
+        self.pending_turn = Turn(
+            turn_id=str(uuid.uuid4()),
+            input_message=user_message,
+        )
+
+    def fill_pending_turn(self, messages:List[BotMessage]):
+        self.pending_turn.assistant_messages = messages
+
+    def commit_pending_turn(self):
+        self.get_current_session().turns.append(self.pending_turn)
+        self.pending_turn = None
+
+    def interrupt_active_task(self):
+        self.paused_tasks.append(self.active_task)
+        self.active_task = None
+        self.active_system_task = None
+
+    def start_task(self, task_context:TaskContext):
+        self.active_task = task_context
+        self.active_system_task = None
+
+    def start_system_task(self, system_context:SystemContext):
+        self.active_system_task = system_context
+
+    def set_slots(self, slots:dict):
+        self.active_task.slots.update(slots)
+
+    def cancel_active_task(self):
+        self.active_task = None
+        self.active_system_task = None
+
+    def resume_task(self, flow_id:str):
+        for task in self.paused_tasks:
+            if task.flow_id == flow_id:
+                self.active_task = task
+                self.paused_tasks.remove(task)
+                break

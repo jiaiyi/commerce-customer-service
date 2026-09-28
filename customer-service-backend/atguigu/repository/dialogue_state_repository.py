@@ -12,11 +12,11 @@ from atguigu.repository.models.dialogue_state import DialogueStateRecord
 class DialogueStateRepository:
 
     def __init__(self, session:AsyncSession):
-        self.session = session
+        self._session = session
 
     async def load(self,sender_id:str):
         # select * from dialogue_state where sender_id = u1001
-        result = await self.session.execute(
+        result = await self._session.execute(
             select(DialogueStateRecord).where(DialogueStateRecord.sender_id == sender_id)
         )
         #从结果中获取记录
@@ -45,5 +45,3 @@ if __name__ == '__main__':
     asyncio.run(test())
 
 
-
-                

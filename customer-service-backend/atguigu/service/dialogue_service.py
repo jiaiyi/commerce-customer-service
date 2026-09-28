@@ -1,7 +1,14 @@
 from atguigu.domain.message import UserMessage, ProcessResult, BotMessage, MessageObject
+from atguigu.engine.dialogue_engine import DialogueEngine
+from atguigu.repository.dialogue_state_repository import DialogueStateRepository
 
 
 class DialogueService:
+
+    def __init__(self,repository:DialogueStateRepository,engine:DialogueEngine):
+        self.repository = repository
+        self.engine = engine
+
 
     def process_message(self,user_message:UserMessage) -> ProcessResult:
         # 1.调用Repository层：根据message.sender_id查询当前用户的对话状态
