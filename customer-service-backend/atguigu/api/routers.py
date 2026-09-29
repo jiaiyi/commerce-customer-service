@@ -1,13 +1,12 @@
 import uuid
 
 from fastapi import APIRouter, Depends
-from langchain.agents.middleware.todo import Todo
 from langchain_core.messages import ChatMessage
 
 from atguigu.api.deps import get_dialogue_service
 from atguigu.api.schemas import ChatHistoryResponse, ChatResponse, ChatRequest, BotMessageResponse, \
     ChatHistoryMessageResponse, ChatObjectPayload
-from atguigu.domain.message import UserMessage, ProcessResult, MessageType, MessageObject
+from atguigu.domain.messages import UserMessage, ProcessResult, MessageType, MessageObject
 from atguigu.service.dialogue_service import DialogueService
 
 router = APIRouter()
@@ -50,7 +49,7 @@ async def chat(chat_request: ChatRequest,dialogue_service: DialogueService = Dep
     user_message:UserMessage = _build_message(chat_request)
 
     # 2.调用DialogueService类中的process_message方法进行对话处理
-    process_result:ProcessResult = dialogue_service.process_message(user_message)
+    process_result:ProcessResult = await dialogue_service.process_message(user_message)
 
     # 3.将领域模型 process_result 转换成交互模型 ChatResponse
     chat_response = _build_response(process_result)

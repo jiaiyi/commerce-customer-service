@@ -29,6 +29,13 @@ class SystemContext:
         flow_id = raw_sys.get("flow_id")
         return SYSTEM_CONTEXT_DICT[flow_id].from_dict(raw_sys)
 
+    def to_dict(self) -> dict:
+        return {
+            "flow_id": self.flow_id,
+            "step_id": self.step_id,
+        }
+
+
 @dataclass(slots=True)
 class StartedSystemContext(SystemContext):
     """system_task_started系统任务上下文"""

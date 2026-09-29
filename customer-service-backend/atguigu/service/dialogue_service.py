@@ -1,4 +1,4 @@
-from atguigu.domain.message import UserMessage, ProcessResult, BotMessage, MessageObject
+from atguigu.domain.messages import UserMessage, ProcessResult, BotMessage, MessageObject
 from atguigu.engine.dialogue_engine import DialogueEngine
 from atguigu.repository.dialogue_state_repository import DialogueStateRepository
 

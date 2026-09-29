@@ -1,6 +1,6 @@
 import time
 
-from atguigu.domain.message import UserMessage, ProcessResult, BotMessage, MessageType
+from atguigu.domain.messages import UserMessage, ProcessResult, BotMessage, MessageType
 from atguigu.domain.state import DialogueState
 
 

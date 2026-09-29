@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List
 
 from atguigu.domain.contexts import TaskContext, SystemContext
-from atguigu.domain.message import UserMessage, BotMessage
+from atguigu.domain.messages import UserMessage, BotMessage
 
 
 @dataclass(slots=True)
